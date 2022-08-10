@@ -1,11 +1,15 @@
 package com.example.service;
 
-import com.example.model.Student;
+import com.example.entity.StudentEntity;
 import io.vertx.core.Future;
 
-public interface StudentService {
+import java.util.List;
 
-    Future<String> get();
-    Future<Student> findById(int id);
+public interface StudentService {
+    Future<StudentEntity> findById(int id);
+
+    Future<List<StudentEntity>> getAll();
+
+    Future<Integer> insert(int id, String name, int age, String address);
 
 }

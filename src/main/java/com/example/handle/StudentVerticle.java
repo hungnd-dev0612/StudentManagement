@@ -1,15 +1,11 @@
 package com.example.handle;
 
-import com.example.repository.Impl.StudentRepositoryImpl;
-import com.example.service.Impl.StudentServiceImpl;
+import com.example.entity.StudentEntity;
+import com.example.service.impl.StudentServiceImpl;
 import com.example.service.StudentService;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
-import io.vertx.core.Vertx;
-import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.Json;
-import io.vertx.core.json.JsonObject;
-import io.vertx.ext.mongo.MongoClient;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 
@@ -21,24 +17,20 @@ public class StudentVerticle extends AbstractVerticle {
     public void start(Future<Void> startFuture) {
         studentService = new StudentServiceImpl(vertx);
         Router route = Router.router(vertx);
-        route.get("/hello").handler(this::handleGetStudent);
-        route.get("/hello/:id").handler(
+        route.get("/student").handler(this::handleGetAll);
+        route.get("/student/:id").handler(
                 this::handleGetStudentById
         );
+        route.get("/student/insert").handler(this::handleInsertStudent);
         vertx.createHttpServer().requestHandler(route).listen(8080);
     }
 
-    public void handleGetStudent(RoutingContext rc) {
-        studentService.get().setHandler(handler -> {
-            rc.response().end(handler.result());
-        });
-    }
 
     public void handleGetStudentById(RoutingContext rc) {
+//        HttpServerRequest
         int id = Integer.parseInt(rc.request().getParam("id"));
         studentService.findById(id).setHandler(handler -> {
             if (handler.succeeded()) {
-                System.out.println(handler.result());
                 rc.response().end(Json.encodePrettily(handler.result()));
             } else {
                 rc.response().end("Loi roi");
@@ -46,5 +38,30 @@ public class StudentVerticle extends AbstractVerticle {
             }
 
         });
+    }
+
+    public void handleGetAll(RoutingContext rc) {
+        studentService.getAll().setHandler(handler -> {
+            if (handler.succeeded()) {
+                rc.response().end(Json.encodePrettily(handler.result()));
+
+            } else {
+                rc.response().end("Loi get all");
+                handler.cause().printStackTrace();
+            }
+        });
+    }
+
+    public void handleInsertStudent(RoutingContext routingContext) {
+        StudentEntity student = new StudentEntity();
+        studentService
+                .insert(student.getId(), student.getName(), student.getAge(), student.getAddress())
+                .setHandler(handle -> {
+                    if (handle.succeeded()) {
+                        routingContext.response()
+                                .putHeader("content-type", "application/json; charset=utf-8")
+                                .end(Json.encodePrettily(student));
+                    }
+                });
     }
 }

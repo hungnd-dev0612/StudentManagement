@@ -1,10 +1,11 @@
-package com.example.model;
+package com.example.entity;
 
+import com.example.dto.StudentDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Student {
+public class StudentEntity {
     @JsonProperty("_id")
     private int id;
     private String name;
@@ -41,5 +42,14 @@ public class Student {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public StudentEntity convertToEntity(StudentDTO dto) {
+        StudentEntity entity = new StudentEntity();
+        entity.setId(dto.getId());
+        entity.setName(dto.getName());
+        entity.setAge(dto.getAge());
+        entity.setAddress(dto.getAddress());
+        return entity;
     }
 }
