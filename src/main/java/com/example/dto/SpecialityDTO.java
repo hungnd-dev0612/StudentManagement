@@ -3,13 +3,12 @@ package com.example.dto;
 import lombok.Data;
 import lombok.Setter;
 
-@Data
+import java.util.List;
 
-public class StudentDTO {
+@Data
+public class SpecialityDTO {
     @Setter
     private String id;
     private String name;
-    private String birthday;
-    private StudentClassDTO studentClass;
-
+    private List<StudentClassDTO> studentsClass;
 }

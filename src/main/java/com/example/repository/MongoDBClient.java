@@ -11,9 +11,8 @@ public class MongoDBClient {
     public MongoClient client(Vertx vertx) {
         JsonObject config = new JsonObject()
                 .put("connection_string", "mongodb://localhost:27017")
-                .put("db_name", "local");
-        MongoClient client = MongoClient.createShared(vertx, config);
-        return client;
+                .put("db_name", "students");
+        return MongoClient.createShared(vertx, config);
     }
 
 }

@@ -11,7 +11,7 @@ public interface StudentRepository {
 
     Future<List<StudentEntity>> findAll();
 
-    Future<Integer> insert(int id, String name, int age, String address);
+    Future<String> insert(StudentEntity entity);
 
     Future<StudentEntity> update();
 

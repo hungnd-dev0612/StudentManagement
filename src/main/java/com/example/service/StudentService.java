@@ -1,5 +1,6 @@
 package com.example.service;
 
+import com.example.dto.StudentDTO;
 import com.example.entity.StudentEntity;
 import io.vertx.core.Future;
 
@@ -10,6 +11,6 @@ public interface StudentService {
 
     Future<List<StudentEntity>> getAll();
 
-    Future<Integer> insert(int id, String name, int age, String address);
+    Future<String> insert(StudentDTO dto);
 
 }
