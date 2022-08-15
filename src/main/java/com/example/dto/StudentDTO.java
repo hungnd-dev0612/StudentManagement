@@ -1,51 +1,20 @@
 package com.example.dto;
 
-import com.example.entity.StudentEntity;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
+@Data
 public class StudentDTO {
-    private int id;
+
+    @JsonProperty("_id")
+    private String id;
     private String name;
-    private int age;
-    private String address;
+    private String birthday;
+    private StudentClassDTO studentClass;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public StudentDTO convertToDTO(StudentEntity entity) {
-        StudentDTO dto = new StudentDTO();
-        dto.setId(entity.getId());
-        dto.setName(entity.getName());
-        dto.setAge(entity.getAge());
-        dto.setAddress(entity.getAddress());
-        return dto;
-    }
 }
