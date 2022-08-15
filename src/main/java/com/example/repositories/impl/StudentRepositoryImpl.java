@@ -1,5 +1,6 @@
 package com.example.repositories.impl;
 
+import com.example.connectdb.MongoDBClient;
 import com.example.entities.StudentEntity;
 import com.example.repositories.StudentRepository;
 import io.vertx.core.Future;
@@ -19,10 +20,7 @@ public class StudentRepositoryImpl implements StudentRepository {
     private static final String STUDENT_COLLECTION = "students";
 
     public StudentRepositoryImpl(Vertx vertx) {
-        JsonObject config = new JsonObject()
-                .put("connection_string", "mongodb://localhost:27017")
-                .put("db_name", "local");
-        client = MongoClient.createShared(vertx, config);
+        client = new MongoDBClient().client(vertx);
     }
 
     @Override

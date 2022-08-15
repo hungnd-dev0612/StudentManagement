@@ -17,7 +17,7 @@ import java.util.List;
 public class StudentServiceImpl implements StudentService {
     private static final Logger LOGGER = LoggerFactory.getLogger(StudentServiceImpl.class);
 
-    StudentRepository repository;
+    private final StudentRepository repository;
 
     public StudentServiceImpl(Vertx vertx) {
         this.repository = new StudentRepositoryImpl(vertx);
@@ -62,7 +62,7 @@ public class StudentServiceImpl implements StudentService {
             }
         });
         return futureDto;
-// code dep.
+// code dep. cua Tan
 //        return repository.findById(id).map(StudentEntity::convertToDTO);
     }
 

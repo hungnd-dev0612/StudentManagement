@@ -8,7 +8,7 @@ public class MongoDBClient {
     public MongoClient client(Vertx vertx) {
         JsonObject config = new JsonObject()
                 .put("connection_string", "mongodb://localhost:27017")
-                .put("db_name", "students");
+                .put("db_name", "local");
         return MongoClient.createShared(vertx, config);
     }
 
