@@ -1,14 +1,15 @@
 package com.example.dto;
 
-import lombok.Data;
-import lombok.Setter;
+
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Data
+@NoArgsConstructor
 public class SpecialityDTO {
-    @Setter
-    private String id;
+
     private String name;
     private List<StudentClassDTO> studentsClass;
+
+
 }

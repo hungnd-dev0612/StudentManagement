@@ -1,6 +1,5 @@
 package com.example;
 
-import com.example.handle.StudentVerticle;
 import io.vertx.core.Vertx;
 
 public class Main {

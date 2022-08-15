@@ -1,4 +1,4 @@
-package com.example.entity;
+package com.example.entities;
 
 import lombok.Data;
 import lombok.Setter;
@@ -10,5 +10,5 @@ public class SpecialityEntity {
     @Setter
     private String _id;
     private String name;
-    private List<StudentClassEntity> studentsClass;
+    private List<ClassEntity> studentsClass;
 }

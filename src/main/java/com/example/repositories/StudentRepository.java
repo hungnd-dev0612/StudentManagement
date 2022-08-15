@@ -1,19 +1,19 @@
-package com.example.repository;
+package com.example.repositories;
 
-import com.example.entity.StudentEntity;
+import com.example.entities.StudentEntity;
 import io.vertx.core.Future;
 
 import java.util.List;
 
 public interface StudentRepository {
 
-    Future<StudentEntity> findById(int id);
+    Future<StudentEntity> findById(String id);
 
     Future<List<StudentEntity>> findAll();
 
     Future<String> insert(StudentEntity entity);
 
-    Future<StudentEntity> update();
+    Future<StudentEntity> update(String id, StudentEntity entity);
 
     void delete();
 //    Single mongo delete result

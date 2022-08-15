@@ -1,16 +1,14 @@
 package com.example.dto;
 
 
-import com.example.entity.SpecialityEntity;
-import lombok.Data;
-import lombok.Setter;
+import com.example.entities.SpecialityEntity;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Data
+
+@NoArgsConstructor
 public class StudentClassDTO {
-    @Setter
-    private String id;
     private String name;
     private SpecialityEntity major;
     private List<StudentDTO> students;
