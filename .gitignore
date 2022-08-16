@@ -21,6 +21,7 @@
 .texlipse
 
 .idea/
+.idea/**
 
 
 
