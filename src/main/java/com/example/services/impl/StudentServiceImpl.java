@@ -86,5 +86,12 @@ public class StudentServiceImpl implements StudentService {
         return repository.update(id, entity);
     }
 
+    @Override
+    public Future<Boolean> delete(String id) {
+
+        return repository.delete(id);
+
+    }
+
 
 }

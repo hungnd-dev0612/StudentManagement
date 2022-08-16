@@ -14,5 +14,7 @@ public interface StudentService {
     Future<String> insert(StudentDTO dto);
 
     //    Future<>
-    Future<StudentEntity> update(String id,  StudentDTO dto);
+    Future<StudentEntity> update(String id, StudentDTO dto);
+
+    Future<Boolean> delete(String id);
 }

@@ -15,7 +15,7 @@ public interface StudentRepository {
 
     Future<StudentEntity> update(String id, StudentEntity entity);
 
-    void delete();
-//    Single mongo delete result
+    Future<Boolean> delete(String id);
+
 
 }

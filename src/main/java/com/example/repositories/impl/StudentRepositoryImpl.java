@@ -25,23 +25,20 @@ public class StudentRepositoryImpl implements StudentRepository {
 
     @Override
     public Future<StudentEntity> findById(String id) {
+//        && result.result() != null
         Future<StudentEntity> future = Future.future();
         JsonObject query = new JsonObject().put("_id", id);
         client.findOne(STUDENT_COLLECTION, query, null, result -> {
-            if (result.succeeded()) {
+            LOGGER.info("result {} ", result.result());
+            if (result.succeeded() && result.result() != null) {
                 JsonObject json = result.result();
-                try {
-                    StudentEntity student = json.mapTo(StudentEntity.class);
-                    LOGGER.info("future object {}", future);
-                    future.complete(student);
-                } catch (Exception exception) {
-                    future.fail(exception);
-                    exception.printStackTrace();
-
-                }
-
+                StudentEntity student = json.mapTo(StudentEntity.class);
+                LOGGER.info("future object {}", future);
+//                future.fail("ID found");
+                future.complete(student);
             } else {
-                future.fail(result.cause());
+//                future.complete(student);
+                future.fail("ID not found");
             }
         });
         return future;
@@ -114,7 +111,45 @@ public class StudentRepositoryImpl implements StudentRepository {
 
 
     @Override
-    public void delete() {
+    public Future<Boolean> delete(String id) {
+//        JsonObject json = new JsonObject().put("_id", id);
+//        Future<Boolean> isSucceed = Future.future();
+//        Future<StudentEntity> findById = findById(id);
+//        findById.setHandler(handler -> {
+//            if (handler.succeeded()) {
+//                client.removeDocument("a", json, ar -> {
+//                    if (ar.succeeded()) {
+//                        isSucceed.complete(true);
+//                    } else {
+//                        isSucceed.fail("xoa bi loi");
+//                    }
+//                });
+//            } else {
+//                isSucceed.fail("id not found");
+//            }
+//
+//
+//        });
+//
+//        return isSucceed;
+        Future<Boolean> isSucceed = Future.future();
+        Future<StudentEntity> entity = findById(id);
+        JsonObject json = new JsonObject().put("_id", id);
+        entity.setHandler(handler -> {
+            if (handler.succeeded()) {
+                client.removeDocument("STUDENT_COLLECTION", json, ar -> {
+                    if (ar.succeeded()) {
+                        isSucceed.complete();
+                    } else {
+                        isSucceed.fail("khong xoa duoc ");
+                    }
+                });
+            } else {
+                isSucceed.fail("id not found");
+            }
+        });
+
+        return isSucceed;
 
     }
 

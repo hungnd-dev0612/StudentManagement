@@ -1,8 +1,10 @@
 package com.example.routers.handlers;
 
 import com.example.dto.StudentDTO;
+import com.example.entities.StudentEntity;
 import com.example.services.StudentService;
 import com.example.services.impl.StudentServiceImpl;
+import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
@@ -62,25 +64,56 @@ public class StudentHandler {
 
     public void update(RoutingContext routingContext) {
         String id = routingContext.request().getParam("id");
-        routingContext.request().bodyHandler(bf -> {
-            JsonObject json = bf.toJsonObject();
-            StudentDTO dto = json.mapTo(StudentDTO.class);
-            service.update(id, dto).setHandler(handle -> {
-                if (handle.succeeded()) {
-                    routingContext.response()
-                            .putHeader(CONTENT_TYPE, CONTENT_VALUE)
-                            .end(Json.encodePrettily(dto));
-                } else {
-                    LOGGER.error("error at update");
-                    handle.cause();
-                }
+        if (id == null) {
+            routingContext.response().setStatusCode(400)
+                    .end(Json.encodePrettily(new JsonObject()
+                            .put("id", "id is not valid")));
+        } else {
+            routingContext.request().bodyHandler(bf -> {
+                JsonObject json = bf.toJsonObject();
+                StudentDTO dto = json.mapTo(StudentDTO.class);
+                service.update(id, dto).setHandler(handle -> {
+                    if (handle.succeeded()) {
+                        routingContext.response()
+                                .putHeader(CONTENT_TYPE, CONTENT_VALUE)
+                                .end(Json.encodePrettily(dto));
+                    } else {
+                        LOGGER.error("error at update");
+                        handle.cause();
+                    }
+                });
             });
-        });
+        }
+
 
     }
 
     public void delete(RoutingContext routingContext) {
-
+        String id = routingContext.request().getParam("id");
+//        LOGGER.info("find by id {}");
+//        service.delete(id).setHandler(ar -> {
+//            if (ar.succeeded() && ar.result()) {
+//                routingContext.response()
+//                        .setStatusCode(200)
+//                        .end(Json.encodePrettily(new JsonObject().put("Id", "delete succeeded")));
+//            } else {
+//                LOGGER.error("Error {}", ar.cause().getMessage());
+//                routingContext.response()
+//                        .setStatusCode(500)
+//                        .end(Json.encodePrettily(new JsonObject().put("Id", "delete fail")));
+//            }
+//        });
+        service.delete(id).setHandler(handler -> {
+            if (handler.succeeded()) {
+                routingContext.response()
+                        .putHeader(CONTENT_TYPE, CONTENT_VALUE)
+                        .end(Json.encodePrettily(handler.result()));
+            } else {
+                routingContext.response()
+                        .putHeader(CONTENT_TYPE, CONTENT_VALUE)
+                        .end(Json.encodePrettily(handler.cause()));
+            }
+        });
     }
 
 }
