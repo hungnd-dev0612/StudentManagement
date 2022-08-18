@@ -9,6 +9,8 @@ public interface StudentRepository {
 
     Future<StudentEntity> findById(String id);
 
+    Future<StudentEntity> findByName(String name);
+
     Future<List<StudentEntity>> findAll();
 
     Future<String> insert(StudentEntity entity);

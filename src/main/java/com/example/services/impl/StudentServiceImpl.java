@@ -2,7 +2,9 @@ package com.example.services.impl;
 
 import com.example.dto.StudentDTO;
 import com.example.entities.StudentEntity;
+import com.example.repositories.ClassRepository;
 import com.example.repositories.StudentRepository;
+import com.example.repositories.impl.ClassRepositoryImpl;
 import com.example.repositories.impl.StudentRepositoryImpl;
 import com.example.services.StudentService;
 import io.vertx.core.Future;
@@ -19,14 +21,15 @@ public class StudentServiceImpl implements StudentService {
 
     private final StudentRepository repository;
 
+    private final ClassRepository classRepo;
+
     public StudentServiceImpl(Vertx vertx) {
         this.repository = new StudentRepositoryImpl(vertx);
-
+        this.classRepo = new ClassRepositoryImpl(vertx);
     }
 
     @Override
     public Future<List<StudentDTO>> getAll() {
-//        JsonObject json = JsonObject.mapFrom()
         Future<List<StudentDTO>> futureListDto = Future.future();
         List<StudentDTO> listDto = new ArrayList<>();
         repository.findAll().setHandler(ar -> {
@@ -49,11 +52,7 @@ public class StudentServiceImpl implements StudentService {
         Future<StudentDTO> futureDto = Future.future();
         repository.findById(id).setHandler(handle -> {
             if (handle.succeeded()) {
-//                dto luc nay dang tao ra mot doi tuong moi, reference toi StudentDTO()
                 JsonObject json = JsonObject.mapFrom(handle.result());
-//                con cai nay la minh tham chieu den constructor
-//                String ss = new String();
-//                StudentDTO dto = new StudentDTO();
                 StudentDTO dto = json.mapTo(StudentDTO.class);
                 futureDto.complete(dto);
                 LOGGER.info("Handle succeeded in findById{}", dto);
@@ -66,12 +65,32 @@ public class StudentServiceImpl implements StudentService {
 //        return repository.findById(id).map(StudentEntity::convertToDTO);
     }
 
+    @Override
+    public Future<StudentDTO> findByName(String name) {
+        Future<StudentDTO> futureDTO = Future.future();
+        repository.findByName(name).setHandler(handler -> {
+            if (handler.succeeded()) {
+                JsonObject json = JsonObject.mapFrom(handler.result());
+                StudentDTO dto = json.mapTo(StudentDTO.class);
+                futureDTO.complete(dto);
+            } else {
+                futureDTO.fail("failure");
+            }
+        });
+        return futureDTO;
+    }
+
 
     @Override
     public Future<String> insert(StudentDTO dto) {
         JsonObject json = JsonObject.mapFrom(dto);
         StudentEntity entity = json.mapTo(StudentEntity.class);
         LOGGER.info("entity: {}", entity);
+        classRepo.findById(dto.getClassId()).setHandler(handler -> {
+           if(handler.succeeded()){
+
+           }
+        });
         return repository.insert(entity);
     }
 
@@ -88,9 +107,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Future<Boolean> delete(String id) {
-
         return repository.delete(id);
-
     }
 
 

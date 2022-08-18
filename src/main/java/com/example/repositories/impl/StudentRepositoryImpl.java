@@ -1,8 +1,10 @@
 package com.example.repositories.impl;
 
 import com.example.connectdb.MongoDBClient;
+import com.example.entities.ClassEntity;
 import com.example.entities.StudentEntity;
 import com.example.repositories.StudentRepository;
+import com.example.utils.SomeContants;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
@@ -34,14 +36,28 @@ public class StudentRepositoryImpl implements StudentRepository {
                 JsonObject json = result.result();
                 StudentEntity student = json.mapTo(StudentEntity.class);
                 LOGGER.info("future object {}", future);
-//                future.fail("ID found");
                 future.complete(student);
             } else {
-//                future.complete(student);
                 future.fail("ID not found");
             }
         });
         return future;
+    }
+
+    @Override
+    public Future<StudentEntity> findByName(String name) {
+        Future<StudentEntity> futureEntity = Future.future();
+        JsonObject query = new JsonObject().put("name", name);
+        JsonObject field = new JsonObject();
+        client.findOne(STUDENT_COLLECTION, query, field, ar -> {
+            if (ar.succeeded()) {
+                StudentEntity entity = ar.result().mapTo(StudentEntity.class);
+                futureEntity.complete(entity);
+            } else {
+                futureEntity.fail("failure");
+            }
+        });
+        return futureEntity;
     }
 
     @Override
@@ -52,6 +68,7 @@ public class StudentRepositoryImpl implements StudentRepository {
             List<StudentEntity> entity;
             if (ar.succeeded()) {
                 List<JsonObject> data = ar.result();
+                LOGGER.info("result {}", ar.result());
                 entity = data.stream().map(student -> student.mapTo(StudentEntity.class)).collect(Collectors.toList());
                 LOGGER.info("data {}", data);
                 future.complete(entity);
@@ -73,9 +90,15 @@ public class StudentRepositoryImpl implements StudentRepository {
         entity.set_id(ObjectId.get().toHexString());
         Future<String> future = Future.future();
         JsonObject query = JsonObject.mapFrom(entity);
-//        if (entity.get_id() == null) {
-//            query.remove("_id");
-//        }
+        JsonObject queryClassCollectionId = new JsonObject().put("_id", entity.getClassId());
+        client.find(SomeContants.CLASS_COLLECTION, queryClassCollectionId, ar -> {
+            if (ar.succeeded()) {
+                LOGGER.info("{}", ar.result());
+            } else {
+                LOGGER.info("classId not found", ar.cause());
+            }
+        });
+
         LOGGER.info("get entity {}", query);
         client.insert(STUDENT_COLLECTION, query, result -> {
             if (result.succeeded()) {
@@ -112,32 +135,13 @@ public class StudentRepositoryImpl implements StudentRepository {
 
     @Override
     public Future<Boolean> delete(String id) {
-//        JsonObject json = new JsonObject().put("_id", id);
-//        Future<Boolean> isSucceed = Future.future();
-//        Future<StudentEntity> findById = findById(id);
-//        findById.setHandler(handler -> {
-//            if (handler.succeeded()) {
-//                client.removeDocument("a", json, ar -> {
-//                    if (ar.succeeded()) {
-//                        isSucceed.complete(true);
-//                    } else {
-//                        isSucceed.fail("xoa bi loi");
-//                    }
-//                });
-//            } else {
-//                isSucceed.fail("id not found");
-//            }
-//
-//
-//        });
-//
-//        return isSucceed;
+
         Future<Boolean> isSucceed = Future.future();
         Future<StudentEntity> entity = findById(id);
         JsonObject json = new JsonObject().put("_id", id);
         entity.setHandler(handler -> {
             if (handler.succeeded()) {
-                client.removeDocument("STUDENT_COLLECTION", json, ar -> {
+                client.removeDocument("students", json, ar -> {
                     if (ar.succeeded()) {
                         isSucceed.complete();
                     } else {

@@ -9,6 +9,8 @@ import java.util.List;
 public interface StudentService {
     Future<StudentDTO> findById(String id);
 
+    Future<StudentDTO> findByName(String name);
+
     Future<List<StudentDTO>> getAll();
 
     Future<String> insert(StudentDTO dto);

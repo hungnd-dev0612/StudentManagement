@@ -5,8 +5,6 @@ import lombok.Data;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SpecialityEntity {
-    private String _id;
-    private String name;
+public class TeacherEntity {
 
 }
