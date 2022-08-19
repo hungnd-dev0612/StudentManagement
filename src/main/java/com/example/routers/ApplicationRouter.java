@@ -24,7 +24,7 @@ public class ApplicationRouter {
 //        Student
         route.get("/students").handler(studentHandler::getAll);
         route.get("/students/:id").handler(studentHandler::findById);
-        route.post("/students/:idClass").handler(studentHandler::insert);
+        route.post("/students").handler(studentHandler::insert);
         route.put("/students/:id").handler(studentHandler::update);
         route.delete("/students/:id").handler(studentHandler::delete);
 

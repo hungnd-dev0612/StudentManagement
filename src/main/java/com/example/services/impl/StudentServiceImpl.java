@@ -82,16 +82,21 @@ public class StudentServiceImpl implements StudentService {
 
 
     @Override
-    public Future<String> insert(StudentDTO dto) {
+    public Future<StudentDTO> insert(StudentDTO dto) {
         JsonObject json = JsonObject.mapFrom(dto);
         StudentEntity entity = json.mapTo(StudentEntity.class);
+        Future<StudentDTO> futureResult = Future.future();
         LOGGER.info("entity: {}", entity);
-        classRepo.findById(dto.getClassId()).setHandler(handler -> {
-           if(handler.succeeded()){
 
-           }
+        classRepo.findById(dto.getClassId()).setHandler(handler -> {
+            if (handler.succeeded()) {
+                repository.insert(entity);
+                futureResult.complete(dto);
+            } else {
+                futureResult.fail("id not found");
+            }
         });
-        return repository.insert(entity);
+        return futureResult;
     }
 
 

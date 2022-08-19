@@ -1,7 +1,6 @@
 package com.example.repositories.impl;
 
 import com.example.connectdb.MongoDBClient;
-import com.example.entities.ClassEntity;
 import com.example.entities.StudentEntity;
 import com.example.repositories.StudentRepository;
 import com.example.utils.SomeContants;
@@ -19,6 +18,7 @@ import java.util.stream.Collectors;
 public class StudentRepositoryImpl implements StudentRepository {
     private static final Logger LOGGER = LoggerFactory.getLogger(StudentRepositoryImpl.class);
     private final MongoClient client;
+
     private static final String STUDENT_COLLECTION = "students";
 
     public StudentRepositoryImpl(Vertx vertx) {

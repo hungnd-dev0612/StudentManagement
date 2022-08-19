@@ -76,11 +76,11 @@ public class ClassServiceImpl implements ClassService {
                 LOGGER.info("id is matching {}", handler.result());
                 repository.insert(entity).setHandler(handle2 -> {
                     if (handler.succeeded()) {
-                        JsonObject json2 = JsonObject.mapFrom(handler.result());
+                        JsonObject json2 = JsonObject.mapFrom(handle2.result());
                         ClassDTO parseToJson = json2.mapTo(ClassDTO.class);
                         LOGGER.info("json2 {}", json2);
                         LOGGER.info("parseToJson {}", parseToJson);
-                        futureDto.complete(parseToJson);
+                        futureDto.complete();
                     } else {
                         LOGGER.error("fail insert");
                         futureDto.fail("fail insert");

@@ -13,7 +13,7 @@ public interface StudentService {
 
     Future<List<StudentDTO>> getAll();
 
-    Future<String> insert(StudentDTO dto);
+    Future<StudentDTO> insert(StudentDTO dto);
 
     //    Future<>
     Future<StudentEntity> update(String id, StudentDTO dto);

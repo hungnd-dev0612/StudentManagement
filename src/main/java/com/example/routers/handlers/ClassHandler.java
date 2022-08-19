@@ -24,16 +24,17 @@ public class ClassHandler {
             JsonObject json = buffer.toJsonObject();
             ClassDTO dto = json.mapTo(ClassDTO.class);
             service.insert(dto).setHandler(handler -> {
-                JsonObject response = new JsonObject().put("error", "khong tim thay speciality nay");
+                JsonObject errorResponse = new JsonObject().put("error", "khong tim thay speciality nay");
+                JsonObject succeededResponse = new JsonObject().put("succeeded", "them du lieu thanh cong");
                 if (handler.succeeded()) {
                     routingContext.response()
                             .putHeader(SomeContants.CONTENT_TYPE, SomeContants.CONTENT_VALUE)
-                            .end(Json.encodePrettily(handler.result()));
+                            .end(Json.encodePrettily(succeededResponse));
                 } else {
                     routingContext.response()
                             .putHeader(SomeContants.CONTENT_TYPE, SomeContants.CONTENT_VALUE)
                             .setStatusCode(400)
-                            .end(Json.encodePrettily(handler.cause().getMessage()));
+                            .end(Json.encodePrettily(errorResponse));
                 }
             });
         });
