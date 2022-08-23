@@ -5,19 +5,15 @@ import io.vertx.core.Future;
 
 import java.util.List;
 
+
 public interface StudentRepository {
+    Future<List<StudentEntity>> findAll();
 
     Future<StudentEntity> findById(String id);
 
-    Future<StudentEntity> findByName(String name);
-
-    Future<List<StudentEntity>> findAll();
-
-    Future<String> insert(StudentEntity entity);
-
     Future<StudentEntity> update(String id, StudentEntity entity);
 
-    Future<Boolean> delete(String id);
+    Future<StudentEntity> insert(StudentEntity entity);
 
-
+    void delete(String id);
 }
