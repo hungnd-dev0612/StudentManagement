@@ -15,10 +15,9 @@ public class StudentVerticle extends AbstractVerticle {
 
     @Override
     public void start(Future<Void> startFuture) throws Exception {
-//        ApplicationRouter studentRoute = new ApplicationRouter(vertx);
-//        Router router = studentRoute.getRouter(vertx);
-//        createHttp(router);
+
         Facade facade = new Facade(vertx);
+
         createHttp(facade.getApplicationRouter().getRouter());
     }
 

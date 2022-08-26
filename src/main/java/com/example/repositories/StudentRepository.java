@@ -16,4 +16,6 @@ public interface StudentRepository {
     Future<StudentEntity> insert(StudentEntity entity);
 
     void delete(String id);
+
+//    Boolean checkName(String name);
 }

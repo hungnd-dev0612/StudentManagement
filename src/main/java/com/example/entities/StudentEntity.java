@@ -13,7 +13,4 @@ public class StudentEntity {
     private String name;
     private String birthday;
     private String classId;
-
-
-
 }

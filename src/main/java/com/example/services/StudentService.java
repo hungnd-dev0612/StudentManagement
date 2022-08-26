@@ -12,7 +12,7 @@ public interface StudentService {
 
     Future<StudentDTO> findById(String id);
 
-    Future<StudentDTO> insert();
+    Future<StudentDTO> insert(StudentDTO dto);
 
     Future<StudentDTO> update(String id, StudentDTO dto);
 

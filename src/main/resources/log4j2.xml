@@ -4,7 +4,7 @@
         <!-- Console appender configuration -->
         <Console name="console" target="SYSTEM_OUT">
             <PatternLayout
-                    pattern="%highlight{%d{dd MM yyyy HH:mm:ss.SSS} [%t] %-5level %c: %msg%n%throwable}{FATAL=white, ERROR=red, WARN=#ff00ff, INFO=fg_#93FCF1, DEBUG=fg_#187CEF, TRACE=blue}"
+                    pattern="%highlight{%d{dd MM yyyy HH:mm:ss.SSS} [%t] %-5level %c: %msg%n%throwable}{FATAL=red, ERROR=red, WARN=yellow bold, INFO=#3fe0a8, DEBUG=white bold, TRACE=blue}"
                     disableAnsi="false"/>
             <!--      %highlight{%d [%t] %-5level: %msg%n%throwable}{FATAL=white, ERROR=red, WARN=#ff00ff, INFO=FF66B2, DEBUG=#3fe0a8, TRACE=blue}-->
 <!--            <PatternLayout-->

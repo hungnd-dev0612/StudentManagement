@@ -6,7 +6,12 @@
 
     <groupId>org.example</groupId>
     <artifactId>StudentManagement</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>api-v1</module>
+        <module>api-v1/api-gateway</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
