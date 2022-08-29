@@ -1,6 +1,6 @@
 package com.example.dto.createdto;
 
-import com.example.dto.StudentClassDTO;
+import com.example.dto.ClassDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
@@ -9,5 +9,5 @@ import lombok.Data;
 public class CreateStudentDTO {
     private String name;
     private String birthday;
-    private StudentClassDTO studentClass;
+    private ClassDTO studentClass;
 }

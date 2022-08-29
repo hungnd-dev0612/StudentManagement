@@ -1,5 +1,5 @@
 package com.example.dto.createdto;
 
-public class CreateSpecialityDTO {
+public class CreateClassDTO {
     private String name;
 }

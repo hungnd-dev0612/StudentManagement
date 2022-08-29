@@ -1,12 +1,12 @@
 package com.example.services.impl;
 
+import com.example.dto.ClassDTO;
 import com.example.dto.StudentDTO;
+import com.example.entities.ClassEntity;
 import com.example.entities.StudentEntity;
 import com.example.repositories.StudentRepository;
-import com.example.repositories.impl.StudentRepositoryImpl;
 import com.example.services.StudentService;
 import io.vertx.core.Future;
-import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,77 +14,87 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class StudentServiceImpl implements StudentService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(StudentServiceImpl.class);
 
     private final StudentRepository repository;
+    private final Logger LOGGER = LoggerFactory.getLogger(StudentServiceImpl.class);
 
-    public StudentServiceImpl(Vertx vertx) {
-        this.repository = new StudentRepositoryImpl(vertx);
-
+    public StudentServiceImpl(StudentRepository repository) {
+        this.repository = repository;
     }
 
     @Override
     public Future<List<StudentDTO>> getAll() {
-//        JsonObject json = JsonObject.mapFrom()
-        Future<List<StudentDTO>> futureListDto = Future.future();
-        List<StudentDTO> listDto = new ArrayList<>();
+        Future<List<StudentDTO>> listFuture = Future.future();
         repository.findAll().setHandler(ar -> {
-                    if (ar.succeeded()) {
-                        for (StudentEntity student : ar.result()) {
-                            JsonObject json = JsonObject.mapFrom(student);
-                            StudentDTO dto = json.mapTo(StudentDTO.class);
-                            listDto.add(dto);
-                        }
-                    }
-                    futureListDto.complete(listDto);
+            if (ar.succeeded()) {
+                List<StudentDTO> listStudent = new ArrayList<>();
+                for (StudentEntity entity : ar.result()) {
+                    LOGGER.info("result{}", ar.result());
+                    JsonObject json = JsonObject.mapFrom(entity);
+                    LOGGER.info("json{}", json);
+                    StudentDTO dto = json.mapTo(StudentDTO.class);
+                    LOGGER.warn("dto{}", dto);
+                    listStudent.add(dto);
                 }
+                listFuture.complete(listStudent);
+            } else {
+                listFuture.fail("get all service failed");
+            }
+        });
 
-        );
-        return futureListDto;
+        return listFuture;
     }
 
     @Override
     public Future<StudentDTO> findById(String id) {
-        Future<StudentDTO> futureDto = Future.future();
-        repository.findById(id).setHandler(handle -> {
-            if (handle.succeeded()) {
-//                dto luc nay dang tao ra mot doi tuong moi, reference toi StudentDTO()
-                JsonObject json = JsonObject.mapFrom(handle.result());
-//                con cai nay la minh tham chieu den constructor
-//                String ss = new String();
-//                StudentDTO dto = new StudentDTO();
-                StudentDTO dto = json.mapTo(StudentDTO.class);
-                futureDto.complete(dto);
-                LOGGER.info("Handle succeeded in findById{}", dto);
+        Future<StudentDTO> studentDTOFuture = Future.future();
+        repository.findById(id).setHandler(ar -> {
+            if (ar.succeeded()) {
+                StudentDTO dto = JsonObject.mapFrom(ar.result()).mapTo(StudentDTO.class);
+                studentDTOFuture.complete(dto);
             } else {
-                LOGGER.error("Error in findById", handle.cause());
+                studentDTOFuture.fail(ar.cause());
             }
         });
-        return futureDto;
-// code dep. cua Tan
-//        return repository.findById(id).map(StudentEntity::convertToDTO);
+        return studentDTOFuture;
     }
-
 
     @Override
-    public Future<String> insert(StudentDTO dto) {
-        JsonObject json = JsonObject.mapFrom(dto);
-        StudentEntity entity = json.mapTo(StudentEntity.class);
-        LOGGER.info("entity: {}", entity);
-        return repository.insert(entity);
-    }
+    public Future<StudentDTO> insert(StudentDTO dto) {
+        Future<StudentDTO> dtoFuture = Future.future();
+        StudentEntity entity = JsonObject.mapFrom(dto).mapTo(StudentEntity.class);
+        repository.insert(entity).setHandler(ar -> {
+            if (ar.succeeded()) {
 
+                StudentDTO parseToDto = JsonObject.mapFrom(ar.result()).mapTo(StudentDTO.class);
+                dtoFuture.complete(parseToDto);
+            } else {
+                dtoFuture.fail(ar.cause());
+            }
+        });
+        return dtoFuture;
+    }
 
     @Override
-    public Future<StudentEntity> update(String id, StudentDTO studentDTO) {
-        studentDTO.setId(id);
-        LOGGER.info(studentDTO.getId(), studentDTO.getName());
-        JsonObject json = JsonObject.mapFrom(studentDTO);
-        StudentEntity entity = json.mapTo(StudentEntity.class);
-        LOGGER.info("entity: {}", entity);
-        return repository.update(id, entity);
+    public Future<StudentDTO> update(String id, StudentDTO dto) {
+        Future<StudentDTO> dtoFuture = Future.future();
+        dto.setId(id);
+        StudentEntity entity = JsonObject.mapFrom(dto).mapTo(StudentEntity.class);
+        repository.update(id, entity).setHandler(ar -> {
+            if (ar.succeeded()) {
+                StudentDTO dto1 = JsonObject.mapFrom(ar.result()).mapTo(StudentDTO.class);
+                dtoFuture.complete(dto1);
+            } else {
+                dtoFuture.fail(ar.cause());
+            }
+        });
+        return dtoFuture;
     }
 
-
+    @Override
+    public void delete(String id) {
+        repository.delete(id);
+    }
 }

@@ -21,6 +21,7 @@
 .texlipse
 
 .idea/
+.idea/**
 
 
 
@@ -89,3 +90,5 @@ buildNumber.properties
 !/.mvn/wrapper/maven-wrapper.jar
 
 
+/.idea/sonarlint/
+/.idea/
